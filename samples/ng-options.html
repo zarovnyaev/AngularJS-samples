@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app="NgOptionsApp">
+    <head>
+        <title>ng-options</title>
+        <meta charset="UTF-8">
+        <script src="../libs/angular/angular.min.js"></script>
+        <script>
+            
+            var ngOptionsApp = angular.module("NgOptionsApp", []);
+            
+            ngOptionsApp.controller("NgOptionsCtrl", function($scope) {
+                
+                $scope.items = ['Item 1', 'Item 2', 'Item 3'];
+                $scope.selectedItem = 'Item 2';
+                
+                $scope.objectItems = [
+                    { id: 43, name: "Samsung FW77SR-B" },
+                    { id: 5,  name: "Unold 8865" },
+                    { id: 11, name: "HP 625" },
+                    { id: 2,  name: "Thermex Champion ER 50V" }
+                ];
+                $scope.selectedObjectItem = $scope.objectItems[1];
+                
+            });
+            
+        </script>
+    </head>
+    <body ng-controller="NgOptionsCtrl">
+        
+        <h1>Select with options from values array</h1>
+        <select ng-model="selectedItem" ng-options="item for item in items"></select>
+        <span>Selected item is <b>{{selectedItem}}</b></span>
+        
+        <h1>Select with complicated options from values objects array</h1>
+        <select ng-model="selectedObjectItem" 
+                ng-options="item.name for item in objectItems track by item.id"></select>
+        <span>Selected item is <b>{{selectedObjectItem.name}}</b> ({{selectedObjectItem.id}})</span>
+        
+    </body>
+</html>

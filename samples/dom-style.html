@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html ng-app="domStyleApp">
+    <head>
+        <title>DOM Style</title>
+        <meta charset="UTF-8">
+        <script src="../libs/angular/angular.min.js"></script>
+        <script>
+            
+            var domStyleApp = angular.module("domStyleApp", []);
+            
+            domStyleApp.controller("domStyleCtrl", function($scope) {
+                
+                $scope.classes = [
+                    { caption: "Red", name: "red" },
+                    { caption: "Green", name: "green" },
+                    { caption: "Blue", name: "blue" },
+                ];
+        
+                $scope.selectedClass = $scope.classes[0];
+                
+                $scope.setClasses = function(classes) {
+                    $scope.classBoxText = classes;
+                }
+                
+                $scope.classObj = {
+                    border: true,
+                    size: true,
+                    bg: true,
+                    color: true,
+                    padding: true
+                };
+                
+                $scope.styleObj = {
+                    border: "5px #000 solid",
+                    fontSize: "27px",
+                    backgroundColor: "lightseagreen",
+                    color: "#fff",
+                    padding: "20px"
+                };
+                
+                $scope.items = [ "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" ];
+                $scope.classForOddElements = "oddClass";
+                $scope.classForEvenElements = "evenClass";
+                
+            });
+            
+        </script>
+        
+        <style>
+            .box { color: #fff; padding: 20px; }
+            .red { background-color: #f00; }
+            .green { background-color: #0f0; }
+            .blue { background-color: #00f; }
+            .block { margin-bottom: 20px; }
+            .inline { display: inline-block; }
+            
+            .border { border: 5px #000 solid; }
+            .size { font-size: 27px; }
+            .bg { background-color: lightseagreen; }
+            .color { color: #fff; }
+            .padding { padding: 20px; }
+            
+            .oddClass { background-color: lightseagreen; }
+            .evenClass { background-color: lightpink; }
+            
+        </style>
+    </head>
+    <body>
+        <div ng-controller="domStyleCtrl">
+            
+            <h1>ng-class with one value</h1>
+            
+            <div class="box block" ng-class="selectedClass.name">{{selectedClass.caption}}</div>
+            
+            <div class='block'>
+                Set color:
+                <span ng-repeat="class in classes" ng-class="class.name" class='inline'>
+                    <label class='box inline'>
+                        <input type="radio" 
+                               ng-model="$parent.selectedClass" 
+                               ng-value="class"
+                               ng-checked="$parent.selectedClass.name == class.name"
+                               name='color'
+                        >
+                        {{class.caption}}
+                    </label>
+                </span>
+            </div>
+            
+            <div class='block'>
+                Set color:
+                <select ng-model="selectedClass" 
+                        ng-options="class.caption for class in classes track by class.name"></select>
+            </div>
+            
+            <h1>ng-class with several values</h1>
+            
+            <div class='block'>
+                <a href="#" 
+                   ng-click="setClasses('blue box border')">Set classes blue and bordered (classe list in string)</a>
+            </div>
+            
+            <div class='block'>
+                <a href="#" 
+                   ng-click="setClasses(['red', 'box', 'border'])">Set classes red and bordered (classe list in array)</a>
+            </div>
+            
+            <div class='block' 
+                 ng-class="['block', classBoxText]">This is box for class test</div>
+            
+            <hr>
+            
+            <div class='block'>
+                <label ng-repeat="(key, value) in classObj">
+                    <input type='checkbox' ng-model='classObj[key]' name='color'> {{key}}
+                </label>
+            </div>
+            
+            <div class='block' ng-class="classObj">This is box for ng-class test</div>
+            
+            <h1>ng-class with one value</h1>
+            
+            <div class='block' ng-style="styleObj">This is box for ng-style test</div>
+            
+            <h1>ng-class-odd and ng-class-even</h1>
+
+            <ol class='block'>
+                <li ng-repeat="item in items"
+                    ng-class-odd="classForOddElements"
+                    ng-class-even="classForEvenElements"
+                >
+                    {{item}}
+                </li>
+            </ol>
+            
+        </div>
+    </body>
+</html>

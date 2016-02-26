@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html ng-app="SpecialHTMLTagsApp">
+    <head>
+        <title>Special HTML Tags</title>
+        <meta charset="UTF-8">
+        <script src="../libs/angular/angular.min.js"></script>
+        <link href="../libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <script>
+            
+            var specialHTMLTagsApp = angular.module("SpecialHTMLTagsApp", []);
+            
+            specialHTMLTagsApp.controller("SpecialHTMLTagsCtrl", function($scope) {
+                
+                $scope.isApply = false;
+                
+            });
+            
+        </script>
+    </head>
+    <body ng-controller="SpecialHTMLTagsCtrl">
+        
+        <div class="container">
+            
+            <h1>Special HTML Tags in AngularJS</h1>
+            
+            <div>
+                <label for="applyCheckbox">
+                    <input type="checkbox" ng-model="isApply" id="applyCheckbox"> Apply special tags
+                </label>
+            </div>
+
+            <h2>ng-disabled</h2>
+            <div>
+                <button class="btn btn-default" ng-disabled="isApply">Button</button>
+            </div>
+
+            <h2>ng-readonly</h2>
+            <div>
+                <input type="text" class="form-control" ng-readonly="isApply" value="Text field">
+            </div>
+
+            <h2>ng-checked</h2>
+            <div>
+                Checkbox <input type="checkbox" ng-checked="isApply"> and 
+                <input type="radio" ng-checked="isApply"> radio button
+            </div>
+
+            <h2>ng-selected</h2>
+            <div>
+                <select class="form-control">
+                    <option>Not selected option</option>
+                    <option ng-selected="isApply">Selected option</option>
+                </select>
+            </div>
+            
+        </div>
+        
+        
+        
+        
+        
+    </body>
+</html>

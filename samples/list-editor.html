@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html ng-app="ListEditorApp">
+    <head>
+        <title>List Editor</title>
+        <meta charset="UTF-8">
+        <script src="../libs/angular/angular.min.js"></script>
+        <link href="../libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <script>
+            
+            var model = {
+                user: "John",
+                products: [
+                    { name: "Samsung FW77SR-B", category: "Microwaves", delivered: true },
+                    { name: "Unold 8865", category: "Blanders", delivered: false },
+                    { name: "HP 625", category: "Laptops", delivered: true },
+                    { name: "Thermex Champion ER 50V", category: "Water heaters", delivered: true }
+                ]
+            };
+            
+            var listEditorApp = angular.module("ListEditorApp", []);
+            
+            listEditorApp.controller("ListEditorCtrl", function($scope) {
+                
+                $scope.user = model.user;
+                $scope.products = model.products;
+                
+                $scope.addProduct = function(product) {
+                    if (angular.isDefined(product)
+                        && angular.isDefined(product.name)
+                        && angular.isDefined(product.category)
+                    ) {
+                        $scope.products.push({
+                            name: product.name,
+                            category: product.category,
+                            delivered: false
+                        });
+                        
+                        $scope.product = {};
+                    }
+                };
+                
+                $scope.getDeliveredInputLabel = function(delivered) {
+                    return (delivered ? "Yes" : "No");
+                };
+                
+                $scope.getDeliveredInputStyle = function(delivered) {
+                    return (delivered ? "color:green;font-weight:bold;" : "color:red;");
+                };
+                
+            });
+            
+        </script>
+    </head>
+    <body ng-controller="ListEditorCtrl">
+        
+        <div class="container">
+
+            <div class="page-header">
+                <h1>{{user}} ({{products.length}})</h1>
+            </div>
+            
+            <div class="panel">
+
+                <div class="form-inline">
+                    <div class="input-group">
+                        
+                        <label class="input-group-addon" for="new-product-name">
+                            Product name
+                        </label>
+                        
+                        <input type="text" class="form-control" 
+                               id="new-product-name" ng-model="product.name">
+                        
+                        <label class="input-group-addon" for="new-product-category">
+                            Product category
+                        </label>
+                        
+                        <input type="text" class="form-control" 
+                               id="new-product-category" ng-model="product.category">
+                        
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" ng-click="addProduct(product)">
+                                Add product
+                            </button>
+                        </span>
+                    </div>
+                    
+                </div>
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Delivered</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="product in products">
+                            <td>
+                                <input type="text" class="form-control"
+                                       ng-model="product.name">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control"
+                                       ng-model="product.category">
+                            </td>
+                            <td>
+                                <label for="delivered_{{$index}}"
+                                       style="{{getDeliveredInputStyle(product.delivered)}}">
+                                    <input type="checkbox" id="delivered_{{$index}}"
+                                           ng-model="product.delivered">
+                                    {{getDeliveredInputLabel(product.delivered)}}
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+            </div>
+            
+        </div>
+    </body>
+</html>

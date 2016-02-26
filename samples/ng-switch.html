@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html ng-app="NgSwitchApp">
+    <head>
+        <title>ng-switch</title>
+        <meta charset="UTF-8">
+        <link href="../libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <script src="../libs/angular/angular.min.js"></script>
+        <script>
+            
+            var ngSwitchApp = angular.module("NgSwitchApp", []);
+            
+            ngSwitchApp.controller("NgSwitchCtrl", function($scope) {
+                
+                $scope.items = [
+                    { id: 43, name: "Samsung FW77SR-B" },
+                    { id: 5,  name: "Unold 8865" },
+                    { id: 11, name: "HP 625" },
+                    { id: 2,  name: "Thermex Champion ER 50V" }
+                ];
+        
+                $scope.viewModes = [
+                    { caption: "Table",         name: "table" },
+                    { caption: "Numbered list", name: "numbered" },
+                    { caption: "Bulleted list", name: "bulleted" }
+                ];
+        
+                $scope.currentViewMode = $scope.viewModes[0];
+        
+            });
+            
+        </script>
+    </head>
+    <body ng-controller="NgSwitchCtrl" style="margin: 10px 0 10px 0;">
+
+        <div class="container">
+
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Set information view:</span>
+                <select class="form-control" 
+                        ng-options="viewMode.caption for viewMode in viewModes track by viewMode.name"
+                        ng-model="currentViewMode"></select>
+            </div>
+
+            <div ng-switch on="currentViewMode.name" style="margin-top:20px;">
+
+                <table class="table table-hover" ng-switch-when="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in items">
+                            <td>{{item.id}}</td>
+                            <td>{{item.name}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <ul ng-switch-when="bulleted">
+                    <li ng-repeat="item in items">{{item.name}} ({{item.id}})</li>
+                </ul>
+                
+                <ol ng-switch-when="numbered">
+                    <li ng-repeat="item in items">{{item.name}} ({{item.id}})</li>
+                </ol>
+                
+            </div>
+
+        </div>
+        
+    </body>
+</html>

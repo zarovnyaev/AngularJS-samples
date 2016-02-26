@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html ng-app="OneWayDataBindingApp">
+    <head>
+        <title>One Way Data Binding</title>
+        <meta charset="UTF-8">
+        <script src="../libs/angular/angular.min.js"></script>
+        <script>
+            
+            var oneWayDataBindingApp = angular.module("OneWayDataBindingApp", []);
+            
+            oneWayDataBindingApp.controller("OneWayDataBindingCtrl", function($scope) {
+                
+                $scope.items = [
+                    { name: "Item 1", value: "Value 1" },
+                    { name: "Item 2", value: "Value 2" },
+                    { name: "Item 3", value: "Value 3" },
+                    { name: "Item 4", value: "Value 4" },
+                    { name: "Item 5", value: "Value 5" }
+                ];
+                
+            });
+            
+        </script>
+    </head>
+    <body ng-controller="OneWayDataBindingCtrl">
+        
+        <div>
+            <div ng-non-bindable>
+                <h2>{{ }} - one way data binding from model to view</h2>
+                <pre>There are {{items.length}} items</pre>
+            </div>
+            <div>There are {{items.length}} items</div>
+        </div>
+        
+        <div>
+            <div ng-non-bindable>
+                <h2>ng-bind - insert value of specified variable into the tag</h2>
+                <pre>&lt;div ng-bind="items.length"&gt;&lt;/div&gt;</pre>
+            </div>
+            <div ng-bind="items.length"></div>
+        </div>
+        
+        <div>
+            <div ng-non-bindable>
+                <h2>ng-bind-template - insert values into the tag with specified template</h2>
+                <pre>&lt;div ng-bind-template="First item: {{items[0].name}}. Second item: {{items[1].name}}."&gt;&lt;/div&gt;</pre>
+            </div>
+            <div ng-bind-template="First item: {{items[0].name}}. Second item: {{items[1].name}}."></div>
+        </div>
+        
+        <div>
+            <div ng-non-bindable>
+                <h2>ng-non-bindable - directive tels Angular not to compile or bind the contents of the current DOM element</h2>
+                <pre>&lt;div ng-non-bindable&gt;There are {{items.length}} items&lt;/div&gt;</pre>
+                <div>There are {{items.length}} items</div>
+            </div>
+        </div>
+        
+    </body>
+</html>

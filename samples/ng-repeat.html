@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html ng-app="NgRepeatApp">
+    <head>
+        <title>ng-repeat</title>
+        <meta charset="UTF-8">
+        <script src="../libs/angular/angular.min.js"></script>
+        <style>
+            .even { background-color: lightblue }
+            .odd { background-color: lightgreen }
+        </style>
+        <script>
+            
+            angular.module("NgRepeatApp", []).controller("NgRepeatCtrl", function($scope) {
+                
+                $scope.items = [
+                    { name: "Samsung FW77SR-B", category: "Microwaves", delivered: true },
+                    { name: "Unold 8865", category: "Blanders", delivered: false },
+                    { name: "HP 625", category: "Laptops", delivered: true },
+                    { name: "Thermex Champion ER 50V", category: "Water heaters", delivered: true }
+                ];
+                
+                $scope.getDeliveredInputLabel = function(delivered) {
+                    return (delivered ? "Delivered" : "Not delivered");
+                };
+                
+                $scope.getDeliveredInputStyle = function(delivered) {
+                    return (delivered ? "color:green;font-weight:bold;" : "color:red;");
+                };
+                
+            });
+            
+        </script>
+    </head>
+    <body ng-controller="NgRepeatCtrl">
+        
+        <h1>Items</h1>
+        
+        <ul>
+            <li ng-repeat="item in items" ng-class="$odd ? 'odd' : 'even' ">
+                
+                Item #{{$index+1}}
+                
+                <span ng-repeat="(key, value) in item">
+                    <span ng-if="$first">>></span>
+                    <b>{{key}}: </b> {{value}}<span ng-if="!$last">,</span>
+                </span>
+                
+            </li>
+        </ul>
+        
+        <!-- ************ -->
+        
+        <h1>
+            Get repeat content from diffrent tags 
+            (ng-repeat-start and ng-repeat-end directives)
+        </h1>
+        
+        <h4 ng-repeat-start="item in items">{{item.name}}</h4>
+        <div>Category: {{item.category}}</div>
+        <div ng-repeat-end style="{{getDeliveredInputStyle(item.delivered)}}">
+            {{getDeliveredInputLabel(item.delivered)}}
+        </div>
+        
+    </body>
+</html>

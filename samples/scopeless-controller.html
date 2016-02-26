@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html ng-app="ScopelessControllerApp">
+    <head>
+        <title>Scopeless Controller</title>
+        <meta charset="UTF-8">
+        <script src="../libs/angular/angular.min.js"></script>
+        <script>
+            
+            angular.module("ScopelessControllerApp", [])
+            .controller("ScopelessControllerCtrl", function() {
+                
+                this.message = "It was sent to the view without scope";
+                
+            });
+            
+        </script>
+    </head>
+    <body ng-controller="ScopelessControllerCtrl as ctrl">
+        <h1>{{ctrl.message}}</h1>
+    </body>
+</html>

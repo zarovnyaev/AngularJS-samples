@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html ng-app="NgCloakApp">
+    <head>
+        <title>ng-cloak</title>
+        <meta charset="UTF-8">
+        <script src="../libs/angular/angular.min.js"></script>
+        <script>
+            
+            var ngCloakApp = angular.module("NgCloakApp", []);
+            
+            ngCloakApp.controller("NgCloakCtrl", function($scope) {
+                
+                $scope.name = "Andrey Zarovnyaev";
+                $scope.occupation = "Software developer";
+                $scope.currentLocation = "Sunnyvale, CA";
+                
+            });
+            
+        </script>
+    </head>
+    <body ng-controller="NgCloakCtrl">
+        <h1 ng-cloak>{{name}}</h1>
+        <div ng-cloak>{{occupation}}</div>
+        <div>{{currentLocation}}</div>
+        <script>alert('As you see tags with ng-cloak directive was hidden until page not loaded');</script>
+    </body>
+</html>
