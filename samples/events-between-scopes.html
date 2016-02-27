@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html ng-app="EventsBetweenScopesApp">
+    <head>
+        <title>Events Between Scopes</title>
+        <meta charset="UTF-8">
+        <link href="../libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <script src="../libs/angular/angular.min.js"></script>
+        <script>
+            
+            angular.module("EventsBetweenScopesApp", [])
+            .controller("controller", function($scope, $rootScope) {
+                
+                $scope.message = '';
+                
+                $scope.$on("messageEvent", function(event, args) {
+                    $scope.message = args.message;
+                    $scope.sender = args.sender;
+                });
+
+                $scope.broadcast = function(sender) {
+                    $scope.$broadcast("messageEvent", {
+                        message: prompt("What broadcast?"),
+                        sender: "#" + sender
+                    });
+                };
+                
+                $scope.emit = function(sender) {
+                    $scope.$emit("messageEvent", {
+                        message: prompt("What emit?"),
+                        sender: "#" + sender
+                    });
+                };
+                
+                $scope.broadcastFromRootScope = function() {
+                    $rootScope.$broadcast("messageEvent", {
+                        message: prompt("What broadcast from root scope?"),
+                        sender: "$rootScope"
+                    });
+                };
+                
+            });
+            
+        </script>
+        <style>
+            body { padding-bottom: 20px; }
+            div[ng-controller=controller] {
+                border: gray 1px dotted;
+                border-radius: 5px;
+                padding: 20px;
+            }
+        </style>
+    </head>
+    <body class="container">
+        
+        <h1>Sending Events Between Scopes</h1>
+        
+        <div ng-controller="controller">
+            
+            <p>
+                <button class="btn btn-default" ng-click="broadcastFromRootScope()">
+                    <span class="glyphicon glyphicon-arrow-down"></span>
+                    Broadcast from root scope
+                </button> 
+            </p>
+            
+            <h2>Controller #1</h2>
+            
+            <p ng-if="message" class="alert alert-info">
+                The last message: <b>{{message}}</b> (from {{sender}})
+            </p>
+            
+            <p>
+                <button class="btn btn-default" ng-click="broadcast(1)">
+                    <span class="glyphicon glyphicon-arrow-down"></span>
+                    Broadcast
+                </button> 
+            </p>
+
+            <div ng-controller="controller">
+                
+                <h2>Controller #2</h2>
+            
+                <p ng-if="message" class="alert alert-info">
+                    The last message: <b>{{message}}</b> (from {{sender}})
+                </p>
+
+                <p>
+                    <button class="btn btn-default" ng-click="emit(2)">
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                        Emit
+                    </button> 
+                    <button class="btn btn-default" ng-click="broadcast(2)">
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                        Broadcast
+                    </button> 
+                </p>
+
+                <div ng-controller="controller">
+
+                    <h2>Controller #3</h2>
+
+                    <p ng-if="message" class="alert alert-info">
+                        The last message: <b>{{message}}</b> (from {{sender}})
+                    </p>
+
+                    <p>
+                        <button class="btn btn-default" ng-click="emit(3)">
+                            <span class="glyphicon glyphicon-arrow-up"></span>
+                            Emit
+                        </button> 
+                        <button class="btn btn-default" ng-click="broadcast(3)">
+                            <span class="glyphicon glyphicon-arrow-down"></span>
+                            Broadcast
+                        </button> 
+                    </p>
+
+                    <div ng-controller="controller">
+
+                        <h2>Controller #4</h2>
+
+                        <p ng-if="message" class="alert alert-info">
+                            The last message: <b>{{message}}</b> (from {{sender}})
+                        </p>
+
+                        <p>
+                            <button class="btn btn-default" ng-click="emit(4)">
+                                <span class="glyphicon glyphicon-arrow-up"></span>
+                                Emit
+                            </button> 
+                        </p>
+
+                    </div>
+
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </body>
+</html>
