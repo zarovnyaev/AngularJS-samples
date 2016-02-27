@@ -15,6 +15,9 @@
                 $scope.$on("messageEvent", function(event, args) {
                     $scope.message = args.message;
                     $scope.sender = args.sender;
+                    // We can use function event.stopPropagation().
+                    // This function stops moving of 
+                    // this event to the next receiver.
                 });
 
                 $scope.broadcast = function(sender) {
