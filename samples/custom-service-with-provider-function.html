@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html ng-app="CustomServiceApp">
+    <head>
+        <title>Custom provider with provider function</title>
+        <meta charset="UTF-8">
+        <script src="../libs/angular/angular.min.js"></script>
+        <link href="../libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <script>
+            
+            // Create service
+            angular.module("myService", []).provider("logger", function() {
+                
+                var showCount = false;
+                var enable = true;
+                
+                return {
+                    
+                    showCountEnabled: function(setting) {
+                        if (angular.isDefined(setting)) {
+                            showCount = setting;
+                            return this;
+                        } else {
+                            return showCount;
+                        }
+                    },
+                    
+                    enableLogger: function(setting) {
+                        if (angular.isDefined(setting)) {
+                            enable = setting;
+                            return this;
+                        } else {
+                            return showCount;
+                        }
+                    },
+                    
+                    $get: function() {
+                        var messageCount = 0;
+                        return {
+                            log: function(msg) {
+                                if (enable) {
+                                    messageCount++;
+                                    console.log(
+                                        "LOG"
+                                        + (showCount ? " #" + messageCount : "")
+                                        + ": " + msg
+                                    );
+                                }
+                            },
+                            getLogged: function() {
+                                return messageCount;
+                            }
+                        };
+                    }
+                    
+                };
+                
+            });
+            
+            // Application module
+            angular.module("CustomServiceApp", ["myService"])
+            
+            // Configure services
+            .config(function(loggerProvider) {
+                loggerProvider.showCountEnabled(true).enableLogger(true);
+            })
+            
+            // Create controller
+            .controller("CustomServiceCtrl", function($scope, logger) {
+                
+                $scope.message = "Open browser console and follow log.";
+                
+                $scope.counter = $scope.logged = 0;
+                
+                $scope.inc = function() {
+                    $scope.counter++;
+                };
+                
+                $scope.$watch("counter", function(value) {
+                    logger.log("Counter value is " + value);
+                    $scope.logged = logger.getLogged();
+                });
+                
+            });
+            
+        </script>
+    </head>
+    <body ng-controller="CustomServiceCtrl" class="container">
+        
+        <h1>Custom service with provider function</h1>
+        
+        <p>{{message}}</p>
+        
+        <p>
+            <button class="btn btn-default" ng-click="inc()">
+                Increment counter and show in log
+            </button>
+        </p>
+        
+        <p>
+            Counter: <b>{{counter}}</b>
+        </p>
+        
+        <p>
+            Logged: <b>{{logged}}</b>
+        </p>
+        
+    </body>
+</html>
