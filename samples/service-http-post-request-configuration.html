@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html ng-app="ServiceApp">
+    <head>
+        <title>Service $http</title>
+        <meta charset="UTF-8">
+        <script src="../libs/angular/angular.min.js"></script>
+        <link href="../libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <script>
+            
+            angular.module("ServiceApp", [])
+            .controller("serviceCtrl", function($scope, $http, $log) {
+                
+                // This is test url with not existing script
+                var url = "not-existing-url-for-test.html";
+                
+                $scope.list = [
+                    { name: "Samsung FW77SR-B", category: "Microwaves", delivered: true },
+                    { name: "Unold 8865", category: "Blanders", delivered: false },
+                    { name: "HP 625", category: "Laptops", delivered: true },
+                    { name: "Thermex Champion ER 50V", category: "Water heaters", delivered: true }
+                ];
+                
+                $scope.sendXmlData = function() {
+
+                    var config = {
+                        headers: { "content-type": "application/xml" },
+                        transformRequest: function(data, headers) {
+
+                            var rootElement = angular.element('<xml>');
+                            var products = angular.element('<products>');
+                            
+                            for (var i in data) {
+                                var product = angular.element("<product>");
+                                product.attr("name", data[i].name);
+                                product.attr("category", data[i].category);
+                                product.attr("delivered", data[i].delivered);
+                                products.append(product);
+                            }
+                            
+                            rootElement.append(products);
+                            var xml = rootElement.html();
+                            
+                            $scope.xml = xml;
+                            
+                            $log.info("XML string for the request: " + xml);
+                            
+                            return xml;
+                        }
+                    };
+        
+                    $http.post(url, $scope.list, config);
+                    
+                };
+                
+            });
+            
+        </script>
+    </head>
+    <body ng-controller="serviceCtrl" class="container">
+        
+        <h1 class="page-header">Service $http</h1>
+        
+        <h2 class="page-header">
+            $http.post with config object that convert sent object to xml string
+        </h2>
+        
+        <p>
+            Object for sending:
+            <pre>{{list | json}}</pre>
+        </p>
+        
+        <p>
+            <button class="btn btn-primary" ng-click="sendXmlData()">
+                Send this list
+            </button>
+        </p>
+
+        <div ng-if="xml">
+            <h4 class="page-header">This XML data was sent on the specified URL</h4>
+            <p><pre>{{xml}}</pre></p>
+        </div>
+        
+        <p>
+            
+        </p>
+        
+        <h4 class="page-header">Information</h4>
+        
+        <p class="alert alert-warning">
+            This sample will work only on the running server. 
+        </p>
+
+        <p class="alert alert-warning">
+            If you start the sample as a file when you click on the 
+            <b>Send this list</b> button you will see error
+            <span class="label label-danger">XMLHttpRequest cannot load.</span>
+            Cross origin requests are only supported for protocol schemes: 
+            http, data, chrome, chrome-extension, https, chrome-extension-resource.
+        </p>
+
+        <p class="alert alert-info" role="alert">
+            Also if you want working sample, you need create script that 
+            will receive XML-information sent by this sample.
+            You have to specify url/path to this script instead file
+            <b>not-existing-url-for-test.html</b>.
+        </p>
+
+        <p class="alert alert-info" role="alert">
+            This list will sent to the not existing url. If you want see 
+            request content open network tab in web browser developer tools.
+        </p>
+            
+    </body>
+</html>

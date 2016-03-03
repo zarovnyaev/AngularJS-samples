@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html ng-app="ServiceApp">
+    <head>
+        <title>Service $http</title>
+        <meta charset="UTF-8">
+        <script src="../libs/angular/angular.min.js"></script>
+        <link href="../libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <script>
+            
+            angular.module("ServiceApp", [])
+            .controller("serviceCtrl", function($scope, $http, $interpolate) {
+                
+                $scope.urlData = {
+                    api_id: "44db6a862fba0b067b1930da0d769e98",
+                    city: "Sunnyvale"
+                };
+                
+                var apiUrl = $interpolate(
+                    "http://api.openweathermap.org/data/2.5/weather?"
+                    + "q={{city}}&mode=xml&appid={{api_id}}"
+                );
+                
+                $scope.weather = null;
+                $scope.loadingError = $scope.loaded = $scope.sentRequest = false;
+                
+                var config = {
+                    transformResponse: function(response, headers) {
+                        
+                        var xml = response.trim();
+                        var city = angular.element(xml).find("city");
+                        var country = angular.element(city).find("country");
+                        var temperature = angular.element(xml).find("temperature");
+                        var wind = angular.element(xml).find("wind");
+                        var windSpeed = angular.element(wind).find("speed");
+                        var windDirection = angular.element(wind).find("direction");
+                        var clouds = angular.element(xml).find("clouds");
+
+                        return {
+                            city: city.attr('name'),
+                            country: country.html(),
+                            temperature: temperature.attr('value'),
+                            temperatureUnit: temperature.attr('unit'),
+                            wind: windSpeed.attr('name'),
+                            windDirection: windDirection.attr('name'),
+                            clouds: clouds.attr('name'),
+                            xml: response
+                        };
+                    } 
+                };
+                
+                $scope.loadWeather = function() {
+                    
+                    $scope.sentRequest = true;
+                    $scope.weather = null;
+                    $scope.loadingError = $scope.loaded = false;
+                    
+                    var promise = $http.get(apiUrl($scope.urlData), config);
+                    promise.then(setWeather, setError);
+        
+                };
+                
+                function setWeather(response) {
+                    $scope.xml = response.data.xml;
+                    delete response.data.xml;
+                    $scope.weatherInfo = response.data;
+                    $scope.loaded = true;
+                    $scope.loadingError = false;
+                    $scope.sentRequest = false;
+                }
+                
+                function setError(error) {
+                    $scope.loadingError = true;
+                    $scope.loaded = false;
+                    $scope.sentRequest = false;
+                    $scope.error = error;
+                }
+                
+            });
+            
+        </script>
+    </head>
+    <body ng-controller="serviceCtrl" class="container">
+        
+        <h1 class="page-header">Service $http</h1>
+        
+        <h2 class="page-header">$http.get with XML. Response configuration.</h2>
+        
+        <p class="form-group">
+            <label for="city">Get current weather data in your city</label>
+            <input type="text" class="form-control" ng-model="urlData.city" id="city">
+        </p>
+        
+        <p class="btn-group">
+            <button class="btn btn-primary" ng-click="loadWeather()">
+                Load weather for the city <b>{{urlData.city}}</b>
+            </button>
+        </p>
+        
+        <div ng-if="loaded || loadingError || sentRequest">
+            
+            <h4 class="page-header">Weather:</h4>
+            
+            <p ng-if="sentRequest">
+                <span class="glyphicon glyphicon-hourglass" aria-hidden="true"></span>
+                Please wait...
+            </p>
+            
+            <p ng-if="loaded">
+                
+                <p>
+                    Location 
+                    <span class="badge">
+                        {{weatherInfo.city}} ({{weatherInfo.country}})
+                    </span>
+                </p>
+                
+                <p>
+                    Temperature 
+                    <span class="badge">
+                        {{weatherInfo.temperature}}°
+                        ({{weatherInfo.temperatureUnit}})
+                    </span>
+                </p>
+                
+                <p>
+                    Wind
+                    <span class="badge">
+                        {{weatherInfo.wind}} ({{weatherInfo.windDirection}})
+                    </span>
+                </p>
+                
+                <p>
+                    Clouds <span class="badge">{{weatherInfo.clouds}}</span>
+                </p>
+                
+                <h4 class="page-header">XML</h4>
+                
+                <p><pre>{{xml}}</pre></p>
+                
+                <h4 class="page-header">Parsed information</h4>
+                
+                <p><pre>{{weatherInfo | json}}</pre></p>
+        
+            </p>
+            
+            <p ng-if="loadingError" class="alert alert-danger">
+                Weather loading error: <b>{{error.statusText}}</b>
+            </p>
+            
+        </div>
+        
+    </body>
+</html>
