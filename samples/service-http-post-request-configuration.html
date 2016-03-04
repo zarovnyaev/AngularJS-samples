@@ -11,7 +11,7 @@
             .controller("serviceCtrl", function($scope, $http, $log) {
                 
                 // This is test url with not existing script
-                var url = "not-existing-url-for-test.html";
+                var url = "service-http-post-request-configuration/receiver.php";
                 
                 $scope.list = [
                     { name: "Samsung FW77SR-B", category: "Microwaves", delivered: true },
@@ -23,7 +23,6 @@
                 $scope.sendXmlData = function() {
 
                     var config = {
-                        headers: { "content-type": "application/xml" },
                         transformRequest: function(data, headers) {
 
                             var rootElement = angular.element('<xml>');
@@ -99,15 +98,9 @@
         </p>
 
         <p class="alert alert-info" role="alert">
-            Also if you want working sample, you need create script that 
-            will receive XML-information sent by this sample.
-            You have to specify url/path to this script instead file
-            <b>not-existing-url-for-test.html</b>.
-        </p>
-
-        <p class="alert alert-info" role="alert">
-            This list will sent to the not existing url. If you want see 
-            request content open network tab in web browser developer tools.
+            This sample sends post data to the php-script 
+            <b>service-http-post-request-configuration/receiver.php</b>.
+            After receiving data script file saves the data to the text file in the same folder.
         </p>
             
     </body>

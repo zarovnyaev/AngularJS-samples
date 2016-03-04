@@ -1,0 +1,1 @@
+<products><product name="Samsung FW77SR-B" category="Microwaves" delivered="true"></product><product name="Unold 8865" category="Blanders" delivered="false"></product><product name="HP 625" category="Laptops" delivered="true"></product><product name="Thermex Champion ER 50V" category="Water heaters" delivered="true"></product></products>
