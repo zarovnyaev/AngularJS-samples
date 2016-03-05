@@ -1,0 +1,53 @@
+
+<p ng-if="products.length == 0" class="alert alert-info" role="alert">
+    List is empty. You can add first product with button <b>Create product</b>
+</p>
+
+<div ng-if="products.length > 0">
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Delivered</th>
+                <th width="70"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="product in products | orderBy: 'name'">
+                <td>
+                    {{product.name}}
+                </td>
+                <td>
+                    {{product.category}}
+                </td>
+                <td style="{{getDeliveredInputStyle(product.delivered)}}">
+                    {{getDeliveredInputLabel(product.delivered)}}
+                </td>
+                <td>
+                    <button class="btn btn-default btn-xs" 
+                            ng-click="showCrudView(product)"
+                            title="Edit product">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                    </button>
+                    <button class="btn btn-danger btn-xs" 
+                            ng-click="deleteProduct(product)"
+                            title="Delete product">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+</div>
+
+<p>
+    <button class="btn btn-primary" 
+            ng-click="showCrudView()"
+            title="Create product">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        Create product
+    </button>
+</p>
