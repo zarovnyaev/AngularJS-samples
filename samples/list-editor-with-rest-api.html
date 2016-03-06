@@ -3,7 +3,9 @@
     <head>
         <title>List Editor</title>
         <meta charset="UTF-8">
+        <base href="/samples/">
         <script src="../libs/angular/angular.min.js"></script>
+        <script src="../libs/angular/angular-route.min.js"></script>
         <script src="list-editor-with-rest-api/app.js"></script>
         <link href="../libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     </head>
@@ -15,7 +17,7 @@
                 <h1>Products ({{products.length}})</h1>
             </div>
             
-            <div ng-include="currentView" class="panel"></div>
+            <div ng-view class="panel"></div>
             
         </div>
     </body>

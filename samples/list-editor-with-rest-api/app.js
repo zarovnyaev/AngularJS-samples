@@ -2,21 +2,39 @@
 var applicationUrl = "list-editor-with-rest-api/";
 var viewsUrl = applicationUrl + "views/";
 var apiUrl = applicationUrl + "rest/products.php";
+var scriptFileName = "/list-editor-with-rest-api.html";
 
-var viewsList = {
-    list: "product-list",
-    crud: "product-crud"
-};
+var listEditorApp = angular.module("ListEditorApp", ["ngRoute"]);
 
-var listEditorApp = angular.module("ListEditorApp", []);
+listEditorApp.config(function($routeProvider, $locationProvider) {
+    
+    $locationProvider.html5Mode(true);
+    
+    $routeProvider.when(scriptFileName, {
+        templateUrl: viewsUrl + "/product-list.html"
+    });
+    
+    $routeProvider.when(scriptFileName + "/edit", {
+        templateUrl: viewsUrl + "/product-crud.html"
+    });
+    
+    $routeProvider.when(scriptFileName + "/create", {
+        templateUrl: viewsUrl + "/product-crud.html"
+    });
+    
+    $routeProvider.otherwise({
+        templateUrl: viewsUrl + "/product-list.html"
+    });
+    
+});
 
 listEditorApp.controller("ListEditorCtrl", function($scope, 
                                                     $exceptionHandler,
-                                                    $http) {
+                                                    $http,
+                                                    $location) {
                                                         
     $scope.refresh = function() {
         $http.get(apiUrl).then(function(response) {
-            console.log(response);
             $scope.products = response.data;
         });
     };
@@ -35,7 +53,7 @@ listEditorApp.controller("ListEditorCtrl", function($scope,
     }
 
     $scope.showListView = function() {
-        setCurrentView('list');
+        $location.path(scriptFileName);
     };
 
     $scope.returnToList = function() {
@@ -46,7 +64,12 @@ listEditorApp.controller("ListEditorCtrl", function($scope,
     $scope.showCrudView = function(product) {
         $scope.isCreating = !angular.isDefined(product);
         $scope.crudProduct = ($scope.isCreating ? {} : angular.copy(product));
-        setCurrentView('crud');
+        
+        if ($scope.isCreating) {
+            $location.path(scriptFileName + '/create');
+        } else {
+            $location.path(scriptFileName + '/edit');
+        }
     };
 
     $scope.deleteProduct = function(product) {
