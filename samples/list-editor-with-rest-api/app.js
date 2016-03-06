@@ -1,7 +1,7 @@
 
 var applicationUrl = "list-editor-with-rest-api/";
 var viewsUrl = applicationUrl + "views/";
-var apiUrl = "list-editor-rest-api/products.php";
+var apiUrl = "products-rest-api/products.php";
 var scriptFileName = "/list-editor-with-rest-api.html";
 
 var listEditorApp = angular.module("ListEditorApp", ["ngRoute"]);
