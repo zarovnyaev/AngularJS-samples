@@ -1,7 +1,7 @@
 
 var applicationUrl = "list-editor-with-rest-api/";
 var viewsUrl = applicationUrl + "views/";
-var apiUrl = "products-rest-api/products.php";
+var apiUrl = "products-rest-api/products/";
 var scriptFileName = "/list-editor-with-rest-api.html";
 
 var listEditorApp = angular.module("ListEditorApp", ["ngRoute"]);
@@ -75,7 +75,7 @@ listEditorApp.controller("ListEditorCtrl", function($scope,
     $scope.deleteProduct = function(product) {
         if (angular.isDefined(product.name)) {
             if (confirm('Are you shure you want to delete product "' + product.name + '"?')) {
-                $http.delete(apiUrl + "?id=" + product.id).then(function(response) {
+                $http.delete(apiUrl + product.id + "/").then(function(response) {
                     $scope.products.splice($scope.products.indexOf(product), 1);
                 });
             }
@@ -94,7 +94,7 @@ listEditorApp.controller("ListEditorCtrl", function($scope,
     function update(product) {
         for (var i in $scope.products) {
             if ($scope.products[i].id === product.id) {
-                $http.put(apiUrl, product).then(function(response) {
+                $http.put(apiUrl + product.id + "/", product).then(function(response) {
                     angular.extend($scope.products[i], product);
                 });
                 break;

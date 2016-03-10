@@ -1,0 +1,4 @@
+Options -Indexes
+AddDefaultCharset utf-8
+RewriteEngine on
+RewriteRule ^products/(([0-9]*)/)?$ products.php?id=$1 [L]
