@@ -15,7 +15,7 @@ class SampleAPI extends API {
         
         DB::getInstance()->delete($id);
         
-        return $this->response();
+        return $this->response(array('deleted' => 1));
     }
     
     /**

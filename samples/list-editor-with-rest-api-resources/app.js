@@ -1,10 +1,17 @@
 
-var applicationUrl = "list-editor-with-rest-api/";
+var applicationUrl = "list-editor-with-rest-api-resources/";
 var viewsUrl = applicationUrl + "views/";
-var apiUrl = "products-rest-api/products";
-var scriptFileName = "/list-editor-with-rest-api.html";
+var apiUrl = "products-rest-api/products/";
+var scriptFileName = "/list-editor-with-rest-api-resources.html";
 
-var listEditorApp = angular.module("ListEditorApp", ["ngRoute"]);
+var listEditorApp = angular.module("ListEditorApp", ["ngRoute", "ngResource"]);
+
+listEditorApp.factory('Product', function($resource) {
+    return $resource( apiUrl + ":id", { id: "@id" }, { 
+        save: { method: 'PUT' },
+        create: { method: 'POST' }
+    } );
+});
 
 listEditorApp.config(function($routeProvider, $locationProvider) {
     
@@ -30,13 +37,12 @@ listEditorApp.config(function($routeProvider, $locationProvider) {
 
 listEditorApp.controller("ListEditorCtrl", function($scope, 
                                                     $exceptionHandler,
-                                                    $http,
+                                                    $resource,
+                                                    Product,
                                                     $location) {
-                                                        
+    
     $scope.refresh = function() {
-        $http.get(apiUrl).then(function(response) {
-            $scope.products = response.data;
-        });
+        $scope.products = Product.query();
     };
     
     /**
@@ -75,7 +81,7 @@ listEditorApp.controller("ListEditorCtrl", function($scope,
     $scope.deleteProduct = function(product) {
         if (angular.isDefined(product.name)) {
             if (confirm('Are you shure you want to delete product "' + product.name + '"?')) {
-                $http.delete(apiUrl + "/" + product.id).then(function(response) {
+                product.$delete().then(function() {
                     $scope.products.splice($scope.products.indexOf(product), 1);
                 });
             }
@@ -94,7 +100,8 @@ listEditorApp.controller("ListEditorCtrl", function($scope,
     function update(product) {
         for (var i in $scope.products) {
             if ($scope.products[i].id === product.id) {
-                $http.put(apiUrl + "/" + product.id, product).then(function(response) {
+                $scope.products[i] = product;
+                $scope.products[i].$save().then(function() {
                     angular.extend($scope.products[i], product);
                 });
                 break;
@@ -103,9 +110,9 @@ listEditorApp.controller("ListEditorCtrl", function($scope,
     }
 
     function create(product) {
-        $http.post(apiUrl, product).then(function(response) {
-            if (angular.isDefined(response.data.id)) {
-                $scope.products.push(response.data);
+        new Product(product).$create().then(function(response) {
+            if (angular.isDefined(response.id)) {
+                $scope.products.push(response);
             }
         });
     }

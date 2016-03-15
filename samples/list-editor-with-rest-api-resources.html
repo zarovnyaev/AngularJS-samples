@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html ng-app="ListEditorApp">
+    <head>
+        <title>List Editor</title>
+        <meta charset="UTF-8">
+        <base href="/samples/">
+        <script src="../libs/angular/angular.min.js"></script>
+        <script src="../libs/angular/angular-route.min.js"></script>
+        <script src="../libs/angular/angular-resource.min.js"></script>
+        <script src="list-editor-with-rest-api-resources/app.js"></script>
+        <link href="../libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body ng-controller="ListEditorCtrl">
+        
+        <div class="container">
+
+            <h1 class="page-header">List editor with REST API and Resources</h1>
+            
+            <h3 class="page-header">Products ({{products.length}})</h3>
+            
+            <div ng-view class="panel"></div>
+            
+        </div>
+    </body>
+</html>
